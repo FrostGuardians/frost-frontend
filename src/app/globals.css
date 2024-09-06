@@ -2,7 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  width: 100%;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  @apply bg-base-100;
+}
+
+main {
+  min-height: 100vh;
+  min-height: 100dvh;
+  @apply mx-auto flex w-full max-w-xl flex-col;
+}
+
+/* :root {
   --background: #ffffff;
   --foreground: #171717;
 }
@@ -24,4 +39,4 @@ body {
   .text-balance {
     text-wrap: balance;
   }
-}
+} */
