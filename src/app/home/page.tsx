@@ -1,20 +1,62 @@
 import ListItem from "@/components/Item";
 import Image from "next/image";
+import { collection, getDocs, limit, orderBy, query } from "firebase/firestore";
+import { firebase } from "@/lib/firebase";
+import { typeToFoodCategory } from "@/lib/utils";
+import NavPlaceholder from "@/components/NavPlaceholder";
+import { FridgeImage, Inventory, Item } from "@/lib/interfaces";
 
-export default function Home() {
+export default async function Home() {
+  const imageQuery = query(
+    collection(firebase, "fridges/Vely0XkPLzum8Hb5KlTL/images"),
+    orderBy("date", "desc"),
+    limit(1)
+  );
+  const imageSnapshot = await getDocs(imageQuery);
+  const imageData = imageSnapshot.docs[0].data() as FridgeImage;
+
+  const inventoryQuery = query(
+    collection(firebase, "fridges/Vely0XkPLzum8Hb5KlTL/inventory"),
+    orderBy("date", "desc"),
+    limit(1)
+  );
+  const inventorySnapshot = await getDocs(inventoryQuery);
+  const inventoryData = inventorySnapshot.docs[0].data() as Inventory;
+
   return (
     <main className="flex flex-col p-2 gap-y-2">
-      <Image
-        src={
-          "https://m.media-amazon.com/images/I/71cwQSRn+dL._AC_UF1000,1000_QL80_.jpg"
-        }
-        alt="Your fridge"
-        width={500}
-        height={500}
-        className="rounded-md shadow-md"
-      />
-      <div className="flex flex-col gap-y-2">
-        <ListItem
+      <div className="relative">
+        <Image
+          src={imageData.urls[0]}
+          alt="Your fridge"
+          width={500}
+          height={500}
+          className="rounded-md shadow-md"
+        />
+        <p className="absolute left-2 bottom-2 z-50">
+          {new Date(
+            imageData.date.seconds * 1000 + imageData.date.nanoseconds / 1000000
+          ).toLocaleString()}
+        </p>
+      </div>
+
+      <ul className="flex flex-col gap-y-2">
+        {inventoryData["items"].map((item: Item) => {
+          return (
+            <ListItem
+              icon={typeToFoodCategory(item.type)}
+              mainContent={item.name}
+              secondaryContent={
+                "Expires " +
+                new Date(
+                  item.expiration.seconds * 1000 +
+                    item.expiration.nanoseconds / 1000000
+                ).toLocaleDateString()
+              }
+            />
+          );
+        })}
+        {/* <ListItem
           icon="Apple"
           mainContent="Apfel"
           secondaryContent="Expires 12.12.2024"
@@ -83,8 +125,9 @@ export default function Home() {
           icon="Strawberry"
           mainContent="Apfel"
           secondaryContent="Expires 12.12.2024"
-        />
-      </div>
+        /> */}
+      </ul>
+      <NavPlaceholder />
     </main>
   );
 }

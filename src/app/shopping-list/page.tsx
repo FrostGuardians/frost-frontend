@@ -1,32 +1,139 @@
-'use client'
+"use client";
 
 import Icon from "@/components/Icon";
 import ListItem from "@/components/Item";
+import NavPlaceholder from "@/components/NavPlaceholder";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getCountFromServer,
+  getDoc,
+  getDocs,
+  limit,
+  onSnapshot,
+  orderBy,
+  query,
+  setDoc,
+  where,
+} from "firebase/firestore";
+import { firebase } from "@/lib/firebase";
+import { ShoppingList } from "@/lib/interfaces";
+import { typeToFoodCategory } from "@/lib/utils";
+import { useEffect, useState } from "react";
 
-export default function ShoppingList() {
+export default function ShoppingListPage() {
+  const [newItem, setNewItem] = useState<string>("");
+  const [shoppingListId, setShoppingListId] = useState<string | undefined>(
+    undefined
+  );
+  const [shoppingList, setShoppingList] = useState<ShoppingList | undefined>(
+    undefined
+  );
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const shoppingListQuery = query(
+        collection(firebase, "fridges/Vely0XkPLzum8Hb5KlTL/shopping-lists"),
+        limit(1)
+      );
+      const shoppingListSnapshot = await getDocs(shoppingListQuery);
+      const shoppingListData =
+        shoppingListSnapshot.docs[0].data() as ShoppingList;
+      setShoppingListId(shoppingListSnapshot.docs[0].id);
+      setShoppingList(shoppingListData);
+    };
+
+    fetchData();
+  }, []);
+
+  async function addItem(name: string) {
+    await setDoc(
+      doc(
+        firebase,
+        "fridges/Vely0XkPLzum8Hb5KlTL/shopping-lists/" + shoppingListId
+      ),
+      {
+        items: shoppingList?.items.concat([name]) || [],
+      }
+    ).then(() => {
+      setShoppingList({
+        items: shoppingList?.items.concat([name]) || [],
+      });
+      setNewItem("");
+    });
+  }
+
+  async function removeItem(index: number) {
+    // Make a copy of the items before modifying it
+    const updatedItems = shoppingList?.items ? [...shoppingList.items] : [];
+
+    // Remove the item at the specified index
+    updatedItems.splice(index, 1);
+
+    await setDoc(
+      doc(
+        firebase,
+        "fridges/Vely0XkPLzum8Hb5KlTL/shopping-lists/" + shoppingListId
+      ),
+      {
+        items: updatedItems,
+      }
+    ).then(() => {
+      setShoppingList({
+        items: updatedItems,
+      });
+      setNewItem("");
+    });
+  }
+
   return (
     <main className="flex flex-col p-2 gap-y-2">
       <div className="shadow rounded-md">
         <div className="w-full flex-row p-2 rounded">
           <div className="flex flex-row gap-2">
-            <button className="flex justify-center aspect-square w-12 h-12 items-center" onClick={() => console.log("add item")}>
-              <Icon name="PlusCircleIcon" />
-            </button>
-
-            <div className="flex grow flex-col justify-center overflow-hidden text-ellipsis pl-1">
+            <div className="flex grow flex-col justify-center overflow-hidden text-ellipsis">
               <div className="line-clamp-1 text-lg text-base-content">
                 <input
+                  value={newItem}
+                  onChange={(event) => setNewItem(event.target.value)}
                   type="text"
-                  placeholder="Type here"
-                  className="input w-full max-w-xs"
+                  placeholder="Your Item"
+                  className="input input-bordered w-full"
+                  onKeyDown={async (e) => {
+                    if (e.key === "Enter") {
+                      await addItem(newItem);
+                    }
+                  }}
                 />
               </div>
             </div>
+            <button
+              onClick={async () => await addItem(newItem)}
+              className="flex justify-center aspect-square w-12 h-12 items-center btn btn-ghost text-primary p-1"
+            >
+              <Icon name="PlusIcon" />
+            </button>
           </div>
         </div>
       </div>
-      <div className="flex flex-col gap-y-2">
-        <ListItem
+      <ul className="flex flex-col gap-y-2">
+        {shoppingList &&
+          shoppingList.items.map((item, index) => {
+            return (
+              <ListItem
+                key={index}
+                icon={typeToFoodCategory(item)}
+                mainContent={item}
+              >
+                <button onClick={async () => await removeItem(index)} className="text-red-600 btn btn-ghost">
+                  <Icon name="TrashIcon" />
+                </button>
+              </ListItem>
+            );
+          })}
+        {/* <ListItem
           icon="Apple"
           mainContent="Apfel"
           secondaryContent="Expires 12.12.2024"
@@ -95,8 +202,9 @@ export default function ShoppingList() {
           icon="Strawberry"
           mainContent="Apfel"
           secondaryContent="Expires 12.12.2024"
-        />
-      </div>
+        /> */}
+      </ul>
+      <NavPlaceholder />
     </main>
   );
 }

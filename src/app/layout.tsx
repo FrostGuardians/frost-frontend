@@ -16,7 +16,8 @@ const geistMono = localFont({
 
 export const metadata: Metadata = {
   title: "Frost Guardians",
-  description: "An AI supplemented fridge inventory management, created at the Hackfestival Mannheim 2024.",
+  description:
+    "An AI supplemented fridge inventory management, created at the Hackfestival Mannheim 2024.",
 };
 
 export default function RootLayout({
@@ -25,8 +26,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" data-theme="light">
+    <html lang="en" data-theme="light" suppressHydrationWarning={true}>
       <body
+        suppressHydrationWarning={true}
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}

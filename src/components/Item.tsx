@@ -7,6 +7,7 @@ interface ListItemProps {
   icon?: PossibleFoodIcons;
   mainContent: string;
   secondaryContent?: string;
+  children?: ReactNode | undefined;
 }
 
 export default function ListItem({
@@ -14,9 +15,10 @@ export default function ListItem({
   icon,
   mainContent,
   secondaryContent,
+  children,
 }: ListItemProps) {
   return (
-    <div className="shadow rounded-md">
+    <li className="shadow rounded-md list-none">
       <div id={id} className="w-full flex-row p-2 rounded">
         <div className="flex flex-row gap-2">
           {icon && (
@@ -26,15 +28,21 @@ export default function ListItem({
           )}
 
           <div className="flex grow flex-col justify-center overflow-hidden text-ellipsis pl-1">
-            <div className="line-clamp-1 text-lg text-base-content">
+            <div className="line-clamp-1 text-lg text-base-content capitalize">
               {mainContent}
             </div>
             {secondaryContent && (
-              <div className="line-clamp-1 text-sm">{secondaryContent}</div>
+              <div className="line-clamp-1 text-sm capitalize">
+                {secondaryContent}
+              </div>
             )}
+          </div>
+
+          <div className="flex justify-center aspect-square w-12 h-12 items-center">
+            {children}
           </div>
         </div>
       </div>
-    </div>
+    </li>
   );
 }
