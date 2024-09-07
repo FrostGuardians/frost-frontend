@@ -11,7 +11,7 @@ import { Recipe } from "@/lib/interfaces";
 
 export default async function Recipes() {
   const recipesQuery = query(
-    collection(firebase, "fridges/Vely0XkPLzum8Hb5KlTL/recipes")
+    collection(firebase, "fridges/" + process.env.FRIDGE_ID + "/recipes")
   );
   const recipesSnapshot = await getDocs(recipesQuery);
 
@@ -38,16 +38,6 @@ export default async function Recipes() {
             </Link>
           );
         })}
-        {/* <ListItem
-          icon="VegiDish"
-          mainContent="Apfel"
-          secondaryContent="Expires 12.12.2024"
-        />
-        <ListItem
-          icon="MeatDish"
-          mainContent="Apfel"
-          secondaryContent="Expires 12.12.2024"
-        /> */}
       </ul>
       <NavPlaceholder />
     </main>

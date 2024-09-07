@@ -35,7 +35,7 @@ export default function ShoppingListPage() {
   useEffect(() => {
     const fetchShoppingList = async () => {
       const shoppingListQuery = query(
-        collection(firebase, "fridges/Vely0XkPLzum8Hb5KlTL/shopping-lists"),
+        collection(firebase, "fridges/" + process.env.FRIDGE_ID + "/shopping-lists"),
         limit(1)
       );
       const shoppingListSnapshot = await getDocs(shoppingListQuery);
@@ -46,7 +46,7 @@ export default function ShoppingListPage() {
     };
     const fetchInventory = async () => {
       const inventoryQuery = query(
-        collection(firebase, "fridges/Vely0XkPLzum8Hb5KlTL/inventory"),
+        collection(firebase, "fridges/" + process.env.FRIDGE_ID + "/inventory"),
         orderBy("date", "desc"),
         limit(1)
       );
@@ -84,7 +84,7 @@ export default function ShoppingListPage() {
     await setDoc(
       doc(
         firebase,
-        "fridges/Vely0XkPLzum8Hb5KlTL/shopping-lists/" + shoppingListId
+        "fridges/" + process.env.FRIDGE_ID + "/shopping-lists/" + shoppingListId
       ),
       {
         items: shoppingList?.items.concat([name]) || [],
@@ -110,7 +110,7 @@ export default function ShoppingListPage() {
     await setDoc(
       doc(
         firebase,
-        "fridges/Vely0XkPLzum8Hb5KlTL/shopping-lists/" + shoppingListId
+        "fridges/" + process.env.FRIDGE_ID + "/shopping-lists/" + shoppingListId
       ),
       {
         items: updatedItems,

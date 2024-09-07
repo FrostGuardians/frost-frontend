@@ -32,7 +32,7 @@ export default function Page({ params }: { params: { id: string } }) {
     const fetchRecipe = async () => {
       const recipeQuery = doc(
         firebase,
-        "fridges/Vely0XkPLzum8Hb5KlTL/recipes",
+        "fridges/" + process.env.FRIDGE_ID + "/recipes",
         params.id
       );
       const recipeSnapshot = await getDoc(recipeQuery);
@@ -41,7 +41,7 @@ export default function Page({ params }: { params: { id: string } }) {
     };
     const fetchShoppingList = async () => {
       const shoppingListQuery = query(
-        collection(firebase, "fridges/Vely0XkPLzum8Hb5KlTL/shopping-lists"),
+        collection(firebase, "fridges/" + process.env.FRIDGE_ID + "/shopping-lists"),
         limit(1)
       );
       const shoppingListSnapshot = await getDocs(shoppingListQuery);
@@ -59,7 +59,7 @@ export default function Page({ params }: { params: { id: string } }) {
     await setDoc(
       doc(
         firebase,
-        "fridges/Vely0XkPLzum8Hb5KlTL/shopping-lists/" + shoppingListId
+        "fridges/" + process.env.FRIDGE_ID + "/shopping-lists/" + shoppingListId
       ),
       {
         items: shoppingList?.items.concat([name]) || [],

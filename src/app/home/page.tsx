@@ -8,7 +8,7 @@ import { FridgeImage, Inventory, Item } from "@/lib/interfaces";
 
 export default async function Home() {
   const imageQuery = query(
-    collection(firebase, "fridges/Vely0XkPLzum8Hb5KlTL/images"),
+    collection(firebase, "fridges/" + process.env.FRIDGE_ID + "/images"),
     orderBy("date", "desc"),
     limit(1)
   );
@@ -16,7 +16,7 @@ export default async function Home() {
   const imageData = imageSnapshot.docs[0].data() as FridgeImage;
 
   const inventoryQuery = query(
-    collection(firebase, "fridges/Vely0XkPLzum8Hb5KlTL/inventory"),
+    collection(firebase, "fridges/" + process.env.FRIDGE_ID + "/inventory"),
     orderBy("date", "desc"),
     limit(1)
   );
