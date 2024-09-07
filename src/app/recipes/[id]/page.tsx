@@ -1,19 +1,13 @@
 "use client";
 
 import {
-  addDoc,
   collection,
-  deleteDoc,
   doc,
-  getCountFromServer,
   getDoc,
   getDocs,
   limit,
-  onSnapshot,
-  orderBy,
   query,
   setDoc,
-  where,
 } from "firebase/firestore";
 import { firebase } from "@/lib/firebase";
 import { Ingredient, Recipe, ShoppingList } from "@/lib/interfaces";
@@ -59,7 +53,7 @@ export default function Page({ params }: { params: { id: string } }) {
 
     fetchRecipe();
     fetchShoppingList();
-  }, []);
+  }, [params.id]);
 
   async function addItem(name: string) {
     await setDoc(

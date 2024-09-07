@@ -4,24 +4,18 @@ import Icon from "@/components/Icon";
 import ListItem from "@/components/Item";
 import NavPlaceholder from "@/components/NavPlaceholder";
 import {
-  addDoc,
   collection,
-  deleteDoc,
   doc,
-  getCountFromServer,
-  getDoc,
   getDocs,
   limit,
-  onSnapshot,
   orderBy,
   query,
   setDoc,
-  where,
 } from "firebase/firestore";
 import { firebase } from "@/lib/firebase";
 import { Inventory, Item, ShoppingList } from "@/lib/interfaces";
 import { typeToFoodCategory } from "@/lib/utils";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 export default function ShoppingListPage() {
@@ -29,7 +23,6 @@ export default function ShoppingListPage() {
   const searchParams = useSearchParams();
   const add = searchParams.get("add");
 
-  const dialogRef = useRef<HTMLButtonElement | null>(null);
   const [newItem, setNewItem] = useState<string>("");
   const [shoppingListId, setShoppingListId] = useState<string | undefined>(
     undefined
@@ -86,23 +79,6 @@ export default function ShoppingListPage() {
       !add
     ) {
       return router.push("?add=" + name);
-      // alert(
-      //   "You already have '" +
-      //     name +
-      //     "' in your fridge! It expires " +
-      //     (inventory?.items || [])
-      //       .sort((a: Item, b: Item) => {
-      //         const aExpiration = new Date(
-      //           a.expiration.seconds * 1000 + a.expiration.nanoseconds / 1000000
-      //         );
-      //         const bExpiration = new Date(
-      //           b.expiration.seconds * 1000 + b.expiration.nanoseconds / 1000000
-      //         );
-      //         return aExpiration.getTime() - bExpiration.getTime();
-      //       })
-      //       .find((item: Item) => item.name == name)?.expiration +
-      //     "."
-      // );
     }
 
     await setDoc(

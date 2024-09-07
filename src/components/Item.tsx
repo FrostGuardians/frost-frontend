@@ -1,5 +1,4 @@
 import { ReactNode } from "react";
-import { PossibleIcons } from "heroicons-lookup";
 import FoodIcon, { PossibleFoodIcons } from "./FoodIcon";
 
 interface ListItemProps {

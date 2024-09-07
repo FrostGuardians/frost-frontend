@@ -5,7 +5,7 @@ import Icon from "./Icon";
 import { usePathname } from "next/navigation";
 
 export default function Nav() {
-  let pathname = usePathname();
+  const pathname = usePathname();
 
   return (
     <>

@@ -1,17 +1,9 @@
 import ListItem from "@/components/Item";
 import NavPlaceholder from "@/components/NavPlaceholder";
 import {
-  addDoc,
   collection,
-  deleteDoc,
-  doc,
-  getCountFromServer,
   getDocs,
-  limit,
-  onSnapshot,
-  orderBy,
   query,
-  where,
 } from "firebase/firestore";
 import { firebase } from "@/lib/firebase";
 import Link from "next/link";
