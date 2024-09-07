@@ -5,12 +5,12 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "firebasestorage.googleapis.com",
-        pathname: "/v0/b/frost-guardians-83c73.appspot.com/**",
+        pathname: "/v0/b/fridge-captures/**",
       },
       {
         protocol: "https",
-        hostname: "storage.googleapis.com",
-        pathname: "/download/storage/v1/**",
+        hostname: "firebasestorage.googleapis.com",
+        pathname: "/v0/b/frost-recipes-images/**",
       },
     ],
   },

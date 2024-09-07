@@ -8,7 +8,7 @@ import { FridgeImage, Inventory, Item } from "@/lib/interfaces";
 
 export default async function Home() {
   const imageQuery = query(
-    collection(firebase, "fridges/" + process.env.FRIDGE_ID + "/images"),
+    collection(firebase, "fridges/" + process.env.NEXT_PUBLIC_FRIDGE_ID + "/images"),
     orderBy("date", "desc"),
     limit(1)
   );
@@ -16,7 +16,7 @@ export default async function Home() {
   const imageData = imageSnapshot.docs[0].data() as FridgeImage;
 
   const inventoryQuery = query(
-    collection(firebase, "fridges/" + process.env.FRIDGE_ID + "/inventory"),
+    collection(firebase, "fridges/" + process.env.NEXT_PUBLIC_FRIDGE_ID + "/inventory"),
     orderBy("date", "desc"),
     limit(1)
   );
@@ -29,12 +29,12 @@ export default async function Home() {
         <Image
           src={imageData.urls[0]}
           alt="Your fridge"
-          width={500}
-          height={500}
+          width={1000}
+          height={1000}
           className="rounded-md shadow-md"
           priority
         />
-        <p className="absolute left-2 bottom-2 z-50">
+        <p className="absolute left-2 bottom-2 z-50 text-white">
           {new Date(
             imageData.date.seconds * 1000 + imageData.date.nanoseconds / 1000000
           ).toLocaleString()}

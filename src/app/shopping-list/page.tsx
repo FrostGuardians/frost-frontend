@@ -35,10 +35,16 @@ export default function ShoppingListPage() {
   useEffect(() => {
     const fetchShoppingList = async () => {
       const shoppingListQuery = query(
-        collection(firebase, "fridges/" + process.env.FRIDGE_ID + "/shopping-lists"),
+        collection(
+          firebase,
+          "fridges/" + process.env.NEXT_PUBLIC_FRIDGE_ID + "/shopping-lists"
+        ),
         limit(1)
       );
       const shoppingListSnapshot = await getDocs(shoppingListQuery);
+      if (shoppingListSnapshot.empty) {
+        throw "No Shopping List";
+      }
       const shoppingListData =
         shoppingListSnapshot.docs[0].data() as ShoppingList;
       setShoppingListId(shoppingListSnapshot.docs[0].id);
@@ -46,14 +52,11 @@ export default function ShoppingListPage() {
     };
     const fetchInventory = async () => {
       const inventoryQuery = query(
-        collection(firebase, "fridges/" + process.env.FRIDGE_ID + "/inventory"),
+        collection(firebase, "fridges/" + process.env.NEXT_PUBLIC_FRIDGE_ID + "/inventory"),
         orderBy("date", "desc"),
         limit(1)
       );
       const inventorySnapshot = await getDocs(inventoryQuery);
-      if (inventorySnapshot.empty) {
-        throw "No Shopping List";
-      }
       const inventoryData = inventorySnapshot.docs[0].data() as Inventory;
       setInventory(inventoryData);
     };
@@ -84,7 +87,7 @@ export default function ShoppingListPage() {
     await setDoc(
       doc(
         firebase,
-        "fridges/" + process.env.FRIDGE_ID + "/shopping-lists/" + shoppingListId
+        "fridges/" + process.env.NEXT_PUBLIC_FRIDGE_ID + "/shopping-lists/" + shoppingListId
       ),
       {
         items: shoppingList?.items.concat([name]) || [],
@@ -110,7 +113,7 @@ export default function ShoppingListPage() {
     await setDoc(
       doc(
         firebase,
-        "fridges/" + process.env.FRIDGE_ID + "/shopping-lists/" + shoppingListId
+        "fridges/" + process.env.NEXT_PUBLIC_FRIDGE_ID + "/shopping-lists/" + shoppingListId
       ),
       {
         items: updatedItems,

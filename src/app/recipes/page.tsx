@@ -11,7 +11,7 @@ import { Recipe } from "@/lib/interfaces";
 
 export default async function Recipes() {
   const recipesQuery = query(
-    collection(firebase, "fridges/" + process.env.FRIDGE_ID + "/recipes")
+    collection(firebase, "fridges/" + process.env.NEXT_PUBLIC_FRIDGE_ID + "/recipes")
   );
   const recipesSnapshot = await getDocs(recipesQuery);
 
@@ -26,8 +26,7 @@ export default async function Recipes() {
                 icon="VegiDish"
                 mainContent={recipeData.name}
                 secondaryContent={
-                  ((recipeData.desc || "").length > 0 ? recipeData.desc + " | " : "") +
-                  recipeData.ingredients
+                                    recipeData.ingredients
                     .filter((ingredient) => ingredient.available == true)
                     .length.toString() +
                   "/" +

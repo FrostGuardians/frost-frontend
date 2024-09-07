@@ -26,9 +26,8 @@ export interface Ingredient {
 }
 
 export interface Recipe {
-    image: string,
+    image_url: string,
     name: string,
-    desc: string,
     ingredients: Ingredient[],
     instructions: string
 }

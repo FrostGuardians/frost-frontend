@@ -32,7 +32,7 @@ export default function Page({ params }: { params: { id: string } }) {
     const fetchRecipe = async () => {
       const recipeQuery = doc(
         firebase,
-        "fridges/" + process.env.FRIDGE_ID + "/recipes",
+        "fridges/" + process.env.NEXT_PUBLIC_FRIDGE_ID + "/recipes",
         params.id
       );
       const recipeSnapshot = await getDoc(recipeQuery);
@@ -41,10 +41,13 @@ export default function Page({ params }: { params: { id: string } }) {
     };
     const fetchShoppingList = async () => {
       const shoppingListQuery = query(
-        collection(firebase, "fridges/" + process.env.FRIDGE_ID + "/shopping-lists"),
+        collection(firebase, "fridges/fridge_demo/shopping-lists"),
         limit(1)
       );
       const shoppingListSnapshot = await getDocs(shoppingListQuery);
+      if (shoppingListSnapshot.empty) {
+        throw "No Shopping List";
+      }
       const shoppingListData =
         shoppingListSnapshot.docs[0].data() as ShoppingList;
       setShoppingListId(shoppingListSnapshot.docs[0].id);
@@ -59,7 +62,7 @@ export default function Page({ params }: { params: { id: string } }) {
     await setDoc(
       doc(
         firebase,
-        "fridges/" + process.env.FRIDGE_ID + "/shopping-lists/" + shoppingListId
+        "fridges/" + process.env.NEXT_PUBLIC_FRIDGE_ID + "/shopping-lists/" + shoppingListId
       ),
       {
         items: shoppingList?.items.concat([name]) || [],
@@ -91,23 +94,22 @@ export default function Page({ params }: { params: { id: string } }) {
       <div className="relative">
         <Link
           href="/recipes"
-          className="flex flex-row justify-left items-center gap-2 absolute top-0 z-50 btn btn-circle btn-ghost"
+          className="flex flex-row justify-left items-center gap-2 absolute top-2 left-2 z-50 btn btn-circle btn-ghost"
         >
           <Icon name="ArrowLeftIcon" />
         </Link>
         <Image
-          src={recipe.image}
+          src={recipe.image_url}
           alt="Your recipe"
-          width={500}
-          height={500}
+          width={1000}
+          height={1000}
           className="rounded-md shadow-md opacity-80"
         />
-        <h1 className="text-5xl font-bold absolute bottom-1/4 translate-y-1/2 left-2">
+        <h1 className="text-5xl font-bold absolute bottom-1/4 translate-y-1/2 left-5">
           {recipe.name}
         </h1>
       </div>
 
-      {recipe.desc != "" ?? <p>{recipe.desc}</p>}
       <h2 className="text-lg font-bold">Ingredients</h2>
       <ul className="flex flex-col gap-y-2">
         {recipe.ingredients.map((ingredient: Ingredient, index) => {
