@@ -32,6 +32,7 @@ export default async function Home() {
           width={500}
           height={500}
           className="rounded-md shadow-md"
+          priority
         />
         <p className="absolute left-2 bottom-2 z-50">
           {new Date(
