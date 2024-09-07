@@ -62,7 +62,10 @@ export default function Page({ params }: { params: { id: string } }) {
     await setDoc(
       doc(
         firebase,
-        "fridges/" + process.env.NEXT_PUBLIC_FRIDGE_ID + "/shopping-lists/" + shoppingListId
+        "fridges/" +
+          process.env.NEXT_PUBLIC_FRIDGE_ID +
+          "/shopping-lists/" +
+          shoppingListId
       ),
       {
         items: shoppingList?.items.concat([name]) || [],
@@ -119,20 +122,23 @@ export default function Page({ params }: { params: { id: string } }) {
               icon={typeToFoodCategory(ingredient.name)}
               mainContent={ingredient.name}
             >
-              {!ingredient.available && (
-                <button
-                  onClick={async () => await addItem(ingredient.name)}
-                  className="btn btn-ghost btn-square"
-                >
-                  <Icon name="ShoppingCartIcon" />
-                </button>
-              )}
+              {!ingredient.available &&
+                !shoppingList?.items
+                  .map((item) => item.toLowerCase())
+                  .includes(ingredient.name.toLowerCase()) && (
+                  <button
+                    onClick={async () => await addItem(ingredient.name)}
+                    className="btn btn-ghost btn-square"
+                  >
+                    <Icon name="ShoppingCartIcon" />
+                  </button>
+                )}
             </ListItem>
           );
         })}
       </ul>
       <h2 className="text-lg font-bold">Instructions</h2>
-      <p className="pb-28">{recipe.instructions}</p>
+      <p className="pb-28 whitespace-pre-wrap">{recipe.instructions}</p>
       <NavPlaceholder />
     </main>
   );

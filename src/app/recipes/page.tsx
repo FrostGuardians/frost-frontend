@@ -1,17 +1,26 @@
 import ListItem from "@/components/Item";
 import NavPlaceholder from "@/components/NavPlaceholder";
-import {
-  collection,
-  getDocs,
-  query,
-} from "firebase/firestore";
+import { collection, getDocs, orderBy, query, limit } from "firebase/firestore";
 import { firebase } from "@/lib/firebase";
 import Link from "next/link";
 import { Recipe } from "@/lib/interfaces";
 
 export default async function Recipes() {
+  const inventoryQuery = query(
+    collection(
+      firebase,
+      "fridges/" + process.env.NEXT_PUBLIC_FRIDGE_ID + "/inventory"
+    ),
+    orderBy("date", "desc"),
+    limit(1)
+  );
+  const inventorySnapshot = await getDocs(inventoryQuery);
+  console.log(inventorySnapshot);
   const recipesQuery = query(
-    collection(firebase, "fridges/" + process.env.NEXT_PUBLIC_FRIDGE_ID + "/recipes")
+    collection(
+      firebase,
+      "fridges/" + process.env.NEXT_PUBLIC_FRIDGE_ID + "/recipes"
+    )
   );
   const recipesSnapshot = await getDocs(recipesQuery);
 
@@ -26,7 +35,7 @@ export default async function Recipes() {
                 icon="VegiDish"
                 mainContent={recipeData.name}
                 secondaryContent={
-                                    recipeData.ingredients
+                  recipeData.ingredients
                     .filter((ingredient) => ingredient.available == true)
                     .length.toString() +
                   "/" +
