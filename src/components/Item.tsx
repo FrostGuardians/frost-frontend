@@ -28,7 +28,7 @@ export default function ListItem({
 
           <div className="flex grow flex-col justify-center overflow-hidden text-ellipsis pl-1">
             <div className="line-clamp-1 text-lg text-base-content capitalize">
-              {mainContent}
+              {mainContent.replace("_", " ")}
             </div>
             {secondaryContent && (
               <div className="line-clamp-1 text-sm capitalize">

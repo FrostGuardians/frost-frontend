@@ -52,7 +52,10 @@ export default function ShoppingListPage() {
     };
     const fetchInventory = async () => {
       const inventoryQuery = query(
-        collection(firebase, "fridges/" + process.env.NEXT_PUBLIC_FRIDGE_ID + "/inventory"),
+        collection(
+          firebase,
+          "fridges/" + process.env.NEXT_PUBLIC_FRIDGE_ID + "/inventory"
+        ),
         orderBy("date", "desc"),
         limit(1)
       );
@@ -87,7 +90,10 @@ export default function ShoppingListPage() {
     await setDoc(
       doc(
         firebase,
-        "fridges/" + process.env.NEXT_PUBLIC_FRIDGE_ID + "/shopping-lists/" + shoppingListId
+        "fridges/" +
+          process.env.NEXT_PUBLIC_FRIDGE_ID +
+          "/shopping-lists/" +
+          shoppingListId
       ),
       {
         items: shoppingList?.items.concat([name]) || [],
@@ -113,7 +119,10 @@ export default function ShoppingListPage() {
     await setDoc(
       doc(
         firebase,
-        "fridges/" + process.env.NEXT_PUBLIC_FRIDGE_ID + "/shopping-lists/" + shoppingListId
+        "fridges/" +
+          process.env.NEXT_PUBLIC_FRIDGE_ID +
+          "/shopping-lists/" +
+          shoppingListId
       ),
       {
         items: updatedItems,
@@ -169,23 +178,7 @@ export default function ShoppingListPage() {
           <div className="modal-box">
             <h3 className="font-bold text-lg">Hello!</h3>
             <p className="py-4">
-              {"You already have '" +
-                add +
-                "' in your fridge! It expires " +
-                (inventory?.items || [])
-                  .sort((a: Item, b: Item) => {
-                    const aExpiration = new Date(
-                      a.expiration.seconds * 1000 +
-                        a.expiration.nanoseconds / 1000000
-                    );
-                    const bExpiration = new Date(
-                      b.expiration.seconds * 1000 +
-                        b.expiration.nanoseconds / 1000000
-                    );
-                    return aExpiration.getTime() - bExpiration.getTime();
-                  })
-                  .find((item: Item) => item.name == add)?.expiration +
-                "."}
+              {"You already have '" + add + "' in your fridge!"}
             </p>
             <div className="modal-action">
               {/* if there is a button in form, it will close the modal */}

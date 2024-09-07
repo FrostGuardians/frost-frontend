@@ -6,21 +6,63 @@ import { typeToFoodCategory } from "@/lib/utils";
 import NavPlaceholder from "@/components/NavPlaceholder";
 import { FridgeImage, Inventory, Item } from "@/lib/interfaces";
 
+export const dynamic = "force-dynamic";
+
 export default async function Home() {
   const imageQuery = query(
-    collection(firebase, "fridges/" + process.env.NEXT_PUBLIC_FRIDGE_ID + "/images"),
+    collection(
+      firebase,
+      "fridges/" + process.env.NEXT_PUBLIC_FRIDGE_ID + "/images"
+    ),
     orderBy("date", "desc"),
     limit(1)
   );
   const imageSnapshot = await getDocs(imageQuery);
+
+  if (imageSnapshot.empty) {
+    return (
+      <main className="flex flex-col p-2 gap-y-2 overflow-y-hidden">
+        <div className="skeleton w-full aspect-square" />
+        <div className="skeleton w-full h-16" />
+        <div className="skeleton w-full h-16" />
+        <div className="skeleton w-full h-16" />
+        <div className="skeleton w-full h-16" />
+        <div className="skeleton w-full h-16" />
+        <div className="skeleton w-full h-16" />
+        <div className="skeleton w-full h-16" />
+        <div className="skeleton w-full h-16" />
+      </main>
+    );
+  }
+
   const imageData = imageSnapshot.docs[0].data() as FridgeImage;
 
   const inventoryQuery = query(
-    collection(firebase, "fridges/" + process.env.NEXT_PUBLIC_FRIDGE_ID + "/inventory"),
+    collection(
+      firebase,
+      "fridges/" + process.env.NEXT_PUBLIC_FRIDGE_ID + "/inventory"
+    ),
     orderBy("date", "desc"),
     limit(1)
   );
   const inventorySnapshot = await getDocs(inventoryQuery);
+
+  if (inventorySnapshot.empty) {
+    return (
+      <main className="flex flex-col p-2 gap-y-2 overflow-y-hidden">
+        <div className="skeleton w-full aspect-square" />
+        <div className="skeleton w-full h-16" />
+        <div className="skeleton w-full h-16" />
+        <div className="skeleton w-full h-16" />
+        <div className="skeleton w-full h-16" />
+        <div className="skeleton w-full h-16" />
+        <div className="skeleton w-full h-16" />
+        <div className="skeleton w-full h-16" />
+        <div className="skeleton w-full h-16" />
+      </main>
+    );
+  }
+
   const inventoryData = inventorySnapshot.docs[0].data() as Inventory;
 
   return (
@@ -35,9 +77,14 @@ export default async function Home() {
           priority
         />
         <p className="absolute left-2 bottom-2 z-50 text-white">
-          {new Date(
-            imageData.date.seconds * 1000 + imageData.date.nanoseconds / 1000000
-          ).toLocaleString()}
+          {(() => {
+            const date = new Date(
+              imageData.date.seconds * 1000 +
+                imageData.date.nanoseconds / 1000000
+            );
+            date.setHours(date.getHours() + 2); // Add 2 hours
+            return date.toLocaleString();
+          })()}
         </p>
       </div>
 
@@ -56,7 +103,7 @@ export default async function Home() {
             return (
               <ListItem
                 key={index}
-                icon={typeToFoodCategory(item.type)}
+                icon={typeToFoodCategory(item.name)}
                 mainContent={item.name}
                 secondaryContent={
                   "Expires " +
