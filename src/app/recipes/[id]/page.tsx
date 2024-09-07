@@ -1,3 +1,5 @@
+"use client";
+
 import {
   addDoc,
   collection,
@@ -10,25 +12,85 @@ import {
   onSnapshot,
   orderBy,
   query,
+  setDoc,
   where,
 } from "firebase/firestore";
 import { firebase } from "@/lib/firebase";
-import { Ingredient, Recipe } from "@/lib/interfaces";
+import { Ingredient, Recipe, ShoppingList } from "@/lib/interfaces";
 import ListItem from "@/components/Item";
 import { typeToFoodCategory } from "@/lib/utils";
 import Image from "next/image";
 import NavPlaceholder from "@/components/NavPlaceholder";
 import Link from "next/link";
 import Icon from "@/components/Icon";
+import { useEffect, useState } from "react";
 
-export default async function Page({ params }: { params: { id: string } }) {
-  const recipeQuery = doc(
-    firebase,
-    "fridges/Vely0XkPLzum8Hb5KlTL/recipes",
-    params.id
+export default function Page({ params }: { params: { id: string } }) {
+  const [recipe, setRecipe] = useState<Recipe | undefined>(undefined);
+  const [shoppingListId, setShoppingListId] = useState<string | undefined>(
+    undefined
   );
-  const recipeSnapshot = await getDoc(recipeQuery);
-  const recipeData = recipeSnapshot.data() as Recipe;
+  const [shoppingList, setShoppingList] = useState<ShoppingList | undefined>(
+    undefined
+  );
+
+  useEffect(() => {
+    const fetchRecipe = async () => {
+      const recipeQuery = doc(
+        firebase,
+        "fridges/Vely0XkPLzum8Hb5KlTL/recipes",
+        params.id
+      );
+      const recipeSnapshot = await getDoc(recipeQuery);
+      const recipeData = recipeSnapshot.data() as Recipe;
+      setRecipe(recipeData);
+    };
+    const fetchShoppingList = async () => {
+      const shoppingListQuery = query(
+        collection(firebase, "fridges/Vely0XkPLzum8Hb5KlTL/shopping-lists"),
+        limit(1)
+      );
+      const shoppingListSnapshot = await getDocs(shoppingListQuery);
+      const shoppingListData =
+        shoppingListSnapshot.docs[0].data() as ShoppingList;
+      setShoppingListId(shoppingListSnapshot.docs[0].id);
+      setShoppingList(shoppingListData);
+    };
+
+    fetchRecipe();
+    fetchShoppingList();
+  }, []);
+
+  async function addItem(name: string) {
+    await setDoc(
+      doc(
+        firebase,
+        "fridges/Vely0XkPLzum8Hb5KlTL/shopping-lists/" + shoppingListId
+      ),
+      {
+        items: shoppingList?.items.concat([name]) || [],
+      }
+    ).then(() => {
+      setShoppingList({
+        items: shoppingList?.items.concat([name]) || [],
+      });
+    });
+  }
+
+  if (recipe == undefined) {
+    return (
+      <main className="flex flex-col p-2 gap-y-2 overflow-y-hidden">
+        <div className="skeleton w-full aspect-square" />
+        <h2 className="text-lg font-bold">Ingredients</h2>
+        <ul className="flex flex-col gap-y-2">
+          <div className="skeleton w-full h-16" />
+          <div className="skeleton w-full h-16" />
+        </ul>
+        <h2 className="text-lg font-bold">Instructions</h2>
+        <div className="skeleton w-full aspect-square" />
+      </main>
+    );
+  }
 
   return (
     <main className="flex flex-col p-2 gap-y-2">
@@ -40,31 +102,41 @@ export default async function Page({ params }: { params: { id: string } }) {
           <Icon name="ArrowLeftIcon" />
         </Link>
         <Image
-          src={recipeData.image}
+          src={recipe.image}
           alt="Your recipe"
           width={500}
           height={500}
           className="rounded-md shadow-md opacity-80"
         />
         <h1 className="text-5xl font-bold absolute bottom-1/4 translate-y-1/2 left-2">
-          {recipeData.name}
+          {recipe.name}
         </h1>
       </div>
 
-      {recipeData.desc != "" ?? <p>{recipeData.desc}</p>}
+      {recipe.desc != "" ?? <p>{recipe.desc}</p>}
       <h2 className="text-lg font-bold">Ingredients</h2>
       <ul className="flex flex-col gap-y-2">
-        {recipeData.ingredients.map((ingredient: Ingredient) => {
+        {recipe.ingredients.map((ingredient: Ingredient, index) => {
           return (
             <ListItem
+              key={index}
               icon={typeToFoodCategory(ingredient.name)}
               mainContent={ingredient.name}
-            />
+            >
+              {!ingredient.available && (
+                <button
+                  onClick={async () => await addItem(ingredient.name)}
+                  className="btn btn-ghost btn-square"
+                >
+                  <Icon name="ShoppingCartIcon" />
+                </button>
+              )}
+            </ListItem>
           );
         })}
       </ul>
       <h2 className="text-lg font-bold">Instructions</h2>
-      <p className="pb-28">{recipeData.instructions}</p>
+      <p className="pb-28">{recipe.instructions}</p>
       <NavPlaceholder />
     </main>
   );

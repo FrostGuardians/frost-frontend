@@ -41,21 +41,33 @@ export default async function Home() {
       </div>
 
       <ul className="flex flex-col gap-y-2">
-        {inventoryData["items"].map((item: Item) => {
-          return (
-            <ListItem
-              icon={typeToFoodCategory(item.type)}
-              mainContent={item.name}
-              secondaryContent={
-                "Expires " +
-                new Date(
-                  item.expiration.seconds * 1000 +
-                    item.expiration.nanoseconds / 1000000
-                ).toLocaleDateString()
-              }
-            />
-          );
-        })}
+        {inventoryData["items"]
+          .sort((a: Item, b: Item) => {
+            const aExpiration = new Date(
+              a.expiration.seconds * 1000 + a.expiration.nanoseconds / 1000000
+            );
+            const bExpiration = new Date(
+              b.expiration.seconds * 1000 + b.expiration.nanoseconds / 1000000
+            );
+            return aExpiration.getTime() - bExpiration.getTime();
+          })
+          .map((item: Item, index) => {
+            return (
+              <ListItem
+                key={index}
+                icon={typeToFoodCategory(item.type)}
+                mainContent={item.name}
+                secondaryContent={
+                  "Expires " +
+                  new Date(
+                    item.expiration.seconds * 1000 +
+                      item.expiration.nanoseconds / 1000000
+                  ).toLocaleDateString()
+                }
+              />
+            );
+          })}
+
         {/* <ListItem
           icon="Apple"
           mainContent="Apfel"

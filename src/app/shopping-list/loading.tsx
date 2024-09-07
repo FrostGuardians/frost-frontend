@@ -10,14 +10,14 @@ export default async function Loading() {
               <div className="line-clamp-1 text-lg text-base-content">
                 <input
                   type="text"
-                  placeholder="Type here"
-                  className="input w-full max-w-xs input-bordered"
+                  placeholder="Your Item"
+                  disabled
+                  className="input input-bordered w-full disabled"
                 />
               </div>
             </div>
-
-            <button className="flex justify-center aspect-square w-12 h-12 items-center btn btn-primary p-1">
-              <Icon name="PlusCircleIcon" />
+            <button className="add-button btn-disabled">
+              <Icon name="PlusIcon" />
             </button>
           </div>
         </div>

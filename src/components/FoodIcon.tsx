@@ -119,14 +119,14 @@ export default function FoodIcon({ name = "Fish" }: IconProps) {
             fill="url(#paint0_linear_20_312)"
             stroke="black"
             strokeWidth="2"
-            stroke-miterlimit="10"
+            strokeMiterlimit="10"
           />
           <path
             d="M15.6002 25.1C17.7541 25.1 19.5002 23.3539 19.5002 21.2C19.5002 19.0461 17.7541 17.3 15.6002 17.3C13.4463 17.3 11.7002 19.0461 11.7002 21.2C11.7002 23.3539 13.4463 25.1 15.6002 25.1Z"
             fill="#FFFBFB"
             stroke="black"
             strokeWidth="2"
-            stroke-miterlimit="10"
+            strokeMiterlimit="10"
           />
           <defs>
             <linearGradient
@@ -411,7 +411,7 @@ export default function FoodIcon({ name = "Fish" }: IconProps) {
             fill="white"
             stroke="black"
             strokeWidth="2"
-            stroke-miterlimit="10"
+            strokeMiterlimit="10"
           />
           <path
             d="M30.2001 24.4637C29.6563 24.5528 29.0997 24.5226 28.5688 24.3751C28.0379 24.2277 27.5454 23.9665 27.1255 23.6098C26.7055 23.2531 26.3682 22.8093 26.1368 22.3092C25.9055 21.8091 25.7856 21.2647 25.7856 20.7137C25.7856 20.1627 25.9055 19.6183 26.1368 19.1182C26.3682 18.6181 26.7055 18.1743 27.1255 17.8176C27.5454 17.4609 28.0379 17.1997 28.5688 17.0523C29.0997 16.9048 29.6563 16.8746 30.2001 16.9637"

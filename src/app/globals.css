@@ -17,6 +17,10 @@ main {
   @apply mx-auto flex w-full max-w-xl flex-col;
 }
 
+.add-button {
+  @apply flex justify-center aspect-square w-12 h-12 items-center btn p-1 btn-outline btn-circle
+}
+
 /* :root {
   --background: #ffffff;
   --foreground: #171717;
