@@ -15,9 +15,9 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Frost Guardians",
+  title: "FrostGuardians",
   description:
-    "An AI supplemented fridge inventory management, created at the Hackfestival Mannheim 2024.",
+    "An AI supplemented fridge inventory management to reduce food waste and with it CO2 emissions, created at the Hackfestival Mannheim 2024.",
 };
 
 export default function RootLayout({
