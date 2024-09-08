@@ -29,7 +29,6 @@ export default async function Recipes() {
   if (inventorySnapshot.empty) {
     return (
       <main className="flex flex-col p-2 gap-y-2 overflow-y-hidden">
-        <div className="skeleton w-full aspect-square" />
         <div className="skeleton w-full h-16" />
         <div className="skeleton w-full h-16" />
         <div className="skeleton w-full h-16" />
@@ -52,6 +51,21 @@ export default async function Recipes() {
     )
   );
   const recipeData = recipeSnapshot.data() as Recipe;
+
+  if (recipeData == undefined) {
+    return (
+      <main className="flex flex-col p-2 gap-y-2 overflow-y-hidden">
+        <div className="skeleton w-full h-16" />
+        <div className="skeleton w-full h-16" />
+        <div className="skeleton w-full h-16" />
+        <div className="skeleton w-full h-16" />
+        <div className="skeleton w-full h-16" />
+        <div className="skeleton w-full h-16" />
+        <div className="skeleton w-full h-16" />
+        <div className="skeleton w-full h-16" />
+      </main>
+    );
+  }
 
   return (
     <main className="flex flex-col p-2 gap-y-2">
